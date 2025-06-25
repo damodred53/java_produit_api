@@ -1,6 +1,7 @@
 package fr.formation.Projet_Grp_Java.feignclient;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +21,9 @@ import fr.formation.Projet_Grp_Java.response.CommentaireResponse;
 @FeignClient(name = "commentaire-api", url = "http://localhost:8081/api/commentaire")
 public interface CommentaireFeignClient {
 
-    @GetMapping("/api/commentaire/note/by-produit-id/{produitId}")
+    @GetMapping("/note/by-produit-id/{produitId}")
     int getNoteByProduitId(@PathVariable("produitId") UUID produitId);
 
-    @GetMapping("/api/commentaire/produit/{produitId}")
-    List<CommentaireResponse> findAllByProduitId(@PathVariable("produitId") String produitId);
+    @GetMapping("/produit/nom/{nom}")
+    List<CommentaireResponse> findAllByProduitNom(@PathVariable("nom") String nom);
 }

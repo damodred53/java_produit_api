@@ -1,6 +1,7 @@
 package fr.formation.Projet_Grp_Java.model;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.hibernate.annotations.UuidGenerator;
 
@@ -15,7 +16,7 @@ import lombok.Setter;
 public class Produit {
     @Id
     @UuidGenerator
-    private String id;
+    private UUID id;
 
     private String nom;
     private BigDecimal prix;

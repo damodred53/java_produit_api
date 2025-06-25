@@ -35,10 +35,16 @@ public class ProduitApiController {
                 return this.repository.findAll()
                                 .stream()
                                 .map(p -> {
-                                        int note = this.commentaireFeignClient.getNoteByProduitId(p.getId());
+                                        List<CommentaireResponse> commentaires = this.commentaireFeignClient
+                                                        .findAllByProduitNom(p.getNom());
+
+                                        int note = (int) commentaires.stream()
+                                                        .mapToInt(CommentaireResponse::getNote)
+                                                        .average()
+                                                        .orElse(-1);
 
                                         return ProduitResponse.builder()
-                                                        .id(p.getId())
+                                                        .id(p.getId().toString())
                                                         .nom(p.getNom())
                                                         .prix(p.getPrix())
                                                         .note(note)
@@ -50,7 +56,8 @@ public class ProduitApiController {
         @GetMapping("/{id}")
         public ProduitByIdResponse findById(@PathVariable UUID id) {
                 Produit produit = this.repository.findById(id).orElseThrow(ProduitNotFoundException::new);
-                List<CommentaireResponse> commentaires = this.commentaireFeignClient.findAllByProduitId(id.toString());
+                List<CommentaireResponse> commentaires = this.commentaireFeignClient
+                                .findAllByProduitNom(produit.getNom());
                 ProduitByIdResponse resp = new ProduitByIdResponse();
 
                 int note = (int) commentaires
@@ -93,6 +100,6 @@ public class ProduitApiController {
 
                 this.repository.save(produit);
 
-                return produit.getId();
+                return produit.getId().toString();
         }
 }
